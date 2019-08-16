@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Free Rep",
+  "version": "1.0",
+  "description": "Remove Rep: stupid paywall.",
+  "icons": {
+    "48": "icons/freeRep-48.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://rep.repubblica.it/*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "freeRep.js"
+      ]
+    }
+  ]
+}
