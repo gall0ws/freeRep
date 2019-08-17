@@ -1,3 +1,9 @@
+// ==UserScript==
+// @name     freeRep
+// @version  1
+// @include  https://rep.repubblica.it/*
+// @grant    none
+// ==/UserScript==
 const log = (...args) => console.log("freeRep:", ...args)
 
 const checkAttr = (el, name, value) => {
