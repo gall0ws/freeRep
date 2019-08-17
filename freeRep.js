@@ -1,45 +1,52 @@
 const log = (...args) => console.log("freeRep:", ...args)
 
-const findNode = (root, predicate) => {
-    if (!root || predicate(root)) {
-	return root
-    }
-    let node = findNode(root.shadowRoot, predicate)
-    if (node) {
-	return node
-    }
-    for (let i=0; i < root.childNodes.length; i++) {
-	node = findNode(root.childNodes[i], predicate)
-	if (node) {
-	    return node
-	}
-    }
-    return node
-}
-
 const checkAttr = (el, name, value) => {
     let retv = false
-    if (el.attributes && el.attributes[name]) {
-	retv = el.attributes[name].value == value
+    if (el && el.attributes && el.attributes[name]) {
+        retv = el.attributes[name].value == value
     }
     return retv
 }
 
-const hide   = el => el.style.display = "none"
-const reveal = el => el.attributes.removeNamedItem("subscriptions-section")
+const hide = el => { if (el) { el.style.display = "none" } }
+const removeAttr = (el, name) => { el && el.attributes.removeNamedItem(name) }
 
-const freeRep = (timeout =200) => {
-    const banner  = findNode(document, el => el.classList && el.classList.contains("paywall-static"))
-    const preview = findNode(document, el => checkAttr(el, "subscriptions-section", "content-not-granted"))
-    const paywall = findNode(document, el => checkAttr(el, "subscriptions-section", "content"))
+const isPaywall = el => checkAttr(el, "subscriptions-section", "content")
+const isPreview = el => checkAttr(el, "subscriptions-section", "content-not-granted")
+const isBanner  = el => el && el.classList && el.classList.contains("paywall-static")
 
-    if (!paywall) {
-	setTimeout(() => freeRep(timeout * 2), timeout)
-    } else {
-	preview && hide(preview)
-	banner && hide(banner)
-	reveal(paywall)
+const findNode = (root, predicate) => {
+    if (!root || predicate(root)) {
+        return root
     }
+    let node = findNode(root.shadowRoot, predicate)
+    if (!node) {
+        for (let i=0; i<root.childNodes.length && !node; i++) {
+            node = findNode(root.childNodes[i], predicate)
+        }
+    }
+    return node
 }
+
+const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise((resolve, reject) => {
+    const rec = tm => {
+        const node = findNode(root, predicate)
+        if (node) {
+            resolve(node)
+        } else if (tm < tlimit) {
+            log(`node not found, retrying in ${tm}ms`)
+            setTimeout(() => rec(tm * 2), tm)
+        } else {
+            reject("node not found")
+        }
+    }
+    rec(timeout)
+})
+
+freeRep = () => tryFindNode(document, isPaywall).then(paywall => {
+    hide(findNode(document, isBanner))
+    hide(findNode(document, isPreview))
+    removeAttr(paywall, "subscriptions-section")
+}).catch(log)
 
 freeRep()
