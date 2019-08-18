@@ -18,5 +18,5 @@ Crea un user script con il contenuto di `freeRep.js`
 4. seleziona *Load unpacked*
 5. seleziona la directory dove hai clonato il repo
 
-### Tampermonkey
+## Tampermonkey (Chrome, Safari, Opera Next)
 Crea un user script con il contenuto di `freeRep.js`
