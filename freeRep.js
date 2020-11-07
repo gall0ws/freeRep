@@ -1,58 +1,22 @@
 // ==UserScript==
 // @name     freeRep
 // @version  1
-// @include  https://rep.repubblica.it/*
+// @match    https://rep.repubblica.it/pwa/*                // use @match not @include      // using https://rep.repubblica.it/* will start on every page, use instead https://rep.repubblica.it/pwa/* so it start only when there's subscribed-only content
 // @grant    none
 // ==/UserScript==
-const log = (...args) => console.log("freeRep:", ...args)
 
-const checkAttr = (el, name, value) => {
-    let retv = false
-    if (el && el.attributes && el.attributes[name]) {
-        retv = el.attributes[name].value == value
-    }
-    return retv
-}
+window.addEventListener('load', function() { // so when the page is fully loaded
+    /* getting short article */ var notSubscribedContent = document.getElementsByTagName("body")[0].getElementsByTagName("news-app")[0].shadowRoot.getElementById("articlePager").getElementsByClassName("iron-selected")[0].shadowRoot.querySelector("div").querySelector("div").querySelector("amp-viewer").querySelector("div").shadowRoot.querySelector("body").getElementsByTagName("main")[0].getElementsByClassName("detail-article_container")[2].getElementsByClassName("detail-article_body")[0].querySelector("div");
+    /* getting full article */ var subscribedContent = document.getElementsByTagName("body")[0].getElementsByTagName("news-app")[0].shadowRoot.getElementById("articlePager").getElementsByClassName("iron-selected")[0].shadowRoot.querySelector("div").querySelector("div").querySelector("amp-viewer").querySelector("div").shadowRoot.querySelector("body").getElementsByTagName("main")[0].getElementsByClassName("detail-article_container")[2].getElementsByClassName("detail-article_body")[0].getElementsByClassName("paywall")[0];
+    var lenght = subscribedContent.getElementsByTagName("br").length; // how many <br> so "paragraphs" are in the full article
 
-const hide = el => { if (el) { el.style.display = "none" } }
-const removeAttr = (el, name) => { el && el.attributes.removeNamedItem(name) }
-
-const isPaywall = el => checkAttr(el, "subscriptions-section", "content")
-const isPreview = el => checkAttr(el, "subscriptions-section", "content-not-granted")
-const isBanner  = el => el && el.classList && el.classList.contains("paywall-static")
-
-const findNode = (root, predicate) => {
-    if (!root || predicate(root)) {
-        return root
-    }
-    let node = findNode(root.shadowRoot, predicate)
-    if (!node) {
-        for (let i=0; i<root.childNodes.length && !node; i++) {
-            node = findNode(root.childNodes[i], predicate)
-        }
-    }
-    return node
-}
-
-const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise((resolve, reject) => {
-    const rec = tm => {
-        const node = findNode(root, predicate)
-        if (node) {
-            resolve(node)
-        } else if (tm < tlimit) {
-            log(`node not found, retrying in ${tm}ms`)
-            setTimeout(() => rec(tm * 2), tm)
-        } else {
-            reject("node not found")
-        }
-    }
-    rec(timeout)
+    notSubscribedContent.remove() // removing short text
+    subscribedContent.setAttribute("subscriptions-section", "true") // adding attribute to the full article so it appears
+    subscribedContent.getElementsByTagName("br")[lenght - 1].nextSibling.appendData("// This subscribed-only content was unlocked by @AnonHexo. \n (https://github.com/AnonHexo) //"); // adding some credits at the end of the article (not required)
+    console.clear() // cleaning the console
 })
 
-freeRep = () => tryFindNode(document, isPaywall).then(paywall => {
-    hide(findNode(document, isBanner))
-    hide(findNode(document, isPreview))
-    removeAttr(paywall, "subscriptions-section")
-}).catch(log)
-
-freeRep()
+// minified version, with no comments:
+/* var notSubscribedContent=document.getElementsByTagName("body")[0].getElementsByTagName("news-app")[0].shadowRoot.getElementById("articlePager").getElementsByClassName("iron-selected")[0].shadowRoot.querySelector("div").querySelector("div").querySelector("amp-viewer").querySelector("div").shadowRoot.querySelector("body").getElementsByTagName("main")[0].getElementsByClassName("detail-article_container")[2].getElementsByClassName("detail-article_body")[0].querySelector("div");var subscribedContent=document.getElementsByTagName("body")[0].getElementsByTagName("news-app")[0].shadowRoot.getElementById("articlePager").getElementsByClassName("iron-selected")[0].shadowRoot.querySelector("div").querySelector("div").querySelector("amp-viewer").querySelector("div").shadowRoot.querySelector("body").getElementsByTagName("main")[0].getElementsByClassName("detail-article_container")[2].getElementsByClassName("detail-article_body")[0].getElementsByClassName("paywall")[0];var lenght=subscribedContent.getElementsByTagName("br").length;notSubscribedContent.remove()
+subscribedContent.setAttribute("subscriptions-section","true")
+subscribedContent.getElementsByTagName("br")[lenght-1].nextSibling.appendData("// This subscribed-only content was unlocked by @AnonHexo. \n (https://github.com/AnonHexo) //");console.clear() */
