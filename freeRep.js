@@ -53,7 +53,7 @@ const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise(
 
 freeRep = () => {
     let el;
-    if (window.location.host == "www.repubblica.it" &&
+    if (window.location.host.endsWith("repubblica.it") &&
         !window.location.pathname.endsWith("/amp/") &&
         (el =  findNode(document, isNewPaywall))) {
             el.innerHTML = ampDiv
