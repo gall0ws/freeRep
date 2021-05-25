@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "free Rep:",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Bypass Rep: paywall.",
   "icons": {
     "48": "icons/freeRep-48.png"

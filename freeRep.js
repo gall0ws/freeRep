@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     freeRep
-// @version  1.1
+// @version  1.2
 // @include  https://*.repubblica.it/*
 // @grant    none
 // ==/UserScript==
