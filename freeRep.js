@@ -27,7 +27,7 @@ const isLaStampa = () => location.host.endsWith("lastampa.it")
 const createAmpLink = () => {
     const a = document.createElement("A")
     a.href = (isLaStampa() ? location.pathname : ".") + "/amp"
-    a.innerText = "Clicka qui per visualizzare l'articolo completo"
+    a.innerText = "Clicca qui per visualizzare l'articolo completo"
     const div = document.createElement("DIV")
     div.style = "margin: auto"
     div.appendChild(a)
