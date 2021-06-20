@@ -9,7 +9,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://*.repubblica.it/*"
+        "https://*.repubblica.it/*",
+        "https://*.lastampa.it/*"
       ],
       "run_at": "document_idle",
       "js": [

@@ -2,9 +2,9 @@
 // @name     freeRep
 // @version  1.2
 // @include  https://*.repubblica.it/*
+// @include  https://*.lastampa.it/*
 // @grant    none
 // ==/UserScript==
-const ampDiv = '<div style="margin: auto"><a href="./amp/">Clicka qui per visualizzare l&apos;articolo completo</a></div>'
 const log = (...args) => console.log("freeRep:", ...args)
 
 const checkAttr = (el, name, value) => {
@@ -22,6 +22,17 @@ const isPaywall = el => checkAttr(el, "subscriptions-section", "content")
 const isPreview = el => checkAttr(el, "subscriptions-section", "content-not-granted")
 const isBanner  = el => el && el.classList && el.classList.contains("paywall-static")
 const isNewPaywall = el => el.classList && el.classList.contains("paywall__content")
+const isLaStampa = () => location.host.endsWith("lastampa.it")
+
+const createAmpLink = () => {
+    const a = document.createElement("A")
+    a.href = (isLaStampa() ? location.pathname : ".") + "/amp"
+    a.innerText = "Clicca qui per visualizzare l'articolo completo"
+    const div = document.createElement("DIV")
+    div.style = "margin: auto"
+    div.appendChild(a)
+    return div;
+}
 
 const findNode = (root, predicate) => {
     if (!root || predicate(root)) {
@@ -53,10 +64,9 @@ const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise(
 
 freeRep = () => {
     let el;
-    if (window.location.host.endsWith("repubblica.it") &&
-        !window.location.pathname.endsWith("/amp/") &&
-        (el =  findNode(document, isNewPaywall))) {
-            el.innerHTML = ampDiv
+    if (!window.location.pathname.endsWith("/amp/") &&
+        (el = findNode(document, isNewPaywall))) {
+        el.replaceChildren(createAmpLink())
     } else {
         tryFindNode(document, isPaywall).then(paywall => {
             hide(findNode(document, isBanner))

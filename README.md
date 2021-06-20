@@ -1,5 +1,5 @@
 # freeRep
-Semplice script che modifica automaticamente il DOM per bypassare il paywall di repubblica.it (Rep:)
+Semplice script che modifica automaticamente il DOM per bypassare il paywall di repubblica.it e lastampa.it
 
 
 ## Firefox 
