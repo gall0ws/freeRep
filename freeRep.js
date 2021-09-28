@@ -33,9 +33,9 @@ const isGazzettaIt = () => location.host.endsWith("gazzetta.it")
 const buildAmpPath = () => {
     let path = "./amp/"
     if (isLaStampa()) {
-        path = location.pathname + "/amp"
+        path = location.pathname + "/amp/"
     } else if (isGazzettaIt()) {
-        path = location.pathname.replace(/_preview(.shtml).*/, '$1/amp')
+        path = location.pathname.replace(/_preview(.shtml).*/, '$1/amp/')
     }
     return path
 }
