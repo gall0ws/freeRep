@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "free Rep:",
-  "version": "1.3",
+  "version": "1.4",
   "description": "Bypass Rep: paywall.",
   "icons": {
     "48": "icons/freeRep-48.png"
@@ -10,7 +10,8 @@
     {
       "matches": [
         "https://*.repubblica.it/*",
-        "https://*.lastampa.it/*"
+        "https://*.lastampa.it/*",
+        "https://*.gazzetta.it/*_preview.shtml*"
       ],
       "run_at": "document_idle",
       "js": [

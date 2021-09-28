@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name     freeRep
-// @version  1.2
+// @version  1.4
 // @include  https://*.repubblica.it/*
 // @include  https://*.lastampa.it/*
+// @include  https://*.gazzetta.it/*_preview.shtml*
 // @grant    none
 // ==/UserScript==
 const log = (...args) => console.log("freeRep:", ...args)
@@ -15,18 +16,33 @@ const checkAttr = (el, name, value) => {
     return retv
 }
 
+const checkClassName = (el, name) => el.classList && el.classList.contains(name)
 const hide = el => { if (el) { el.style.display = "none" } }
 const removeAttr = (el, name) => { el && el.attributes.removeNamedItem(name) }
 
 const isPaywall = el => checkAttr(el, "subscriptions-section", "content")
 const isPreview = el => checkAttr(el, "subscriptions-section", "content-not-granted")
-const isBanner  = el => el && el.classList && el.classList.contains("paywall-static")
-const isNewPaywall = el => el.classList && el.classList.contains("paywall__content")
+const isBanner  = el => checkClassName(el, "paywall-static")
+const isNewPaywall = el => checkClassName(el, "paywall__content")
+const isGazzettaPaywall = el => checkClassName(el, "bck-freemium__wall")
+const isGazzettaPartnerLink = el => checkClassName(el, "is-partner-link")
+const isGazzettaContent = el => checkAttr(el, "class", "content") // exact match
 const isLaStampa = () => location.host.endsWith("lastampa.it")
+const isGazzettaIt = () => location.host.endsWith("gazzetta.it")
+
+const buildAmpPath = () => {
+    let path = "./amp/"
+    if (isLaStampa()) {
+        path = location.pathname + "/amp"
+    } else if (isGazzettaIt()) {
+        path = location.pathname.replace(/_preview(.shtml).*/, '$1/amp')
+    }
+    return path
+}
 
 const createAmpLink = () => {
     const a = document.createElement("A")
-    a.href = (isLaStampa() ? location.pathname : ".") + "/amp"
+    a.href = buildAmpPath()
     a.innerText = "Clicca qui per visualizzare l'articolo completo"
     const div = document.createElement("DIV")
     div.style = "margin: auto"
@@ -62,11 +78,25 @@ const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise(
     rec(timeout)
 })
 
-freeRep = () => {
-    let el;
-    if (!window.location.pathname.endsWith("/amp/") &&
-        (el = findNode(document, isNewPaywall))) {
-        el.replaceChildren(createAmpLink())
+const freeRep = () => {
+    if (!window.location.pathname.endsWith("/amp/")) {
+        if (isGazzettaIt()) {
+            [isGazzettaPaywall, isGazzettaPartnerLink].forEach(p => {
+                const el = findNode(document, p)
+                if (el) {
+                    el.remove()
+                }
+            })
+            const content = findNode(document, isGazzettaContent)
+            if (content) {
+                content.appendChild(createAmpLink())
+            }
+        } else {
+            const el = findNode(document, isNewPaywall);
+            if (el) {
+                el.replaceChildren(createAmpLink())
+            }
+        }
     } else {
         tryFindNode(document, isPaywall).then(paywall => {
             hide(findNode(document, isBanner))
