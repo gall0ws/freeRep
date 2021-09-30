@@ -1,6 +1,9 @@
 # freeRep
-Semplice script che modifica automaticamente il DOM per bypassare il paywall di repubblica.it e lastampa.it
+Semplice script originariamente nato per bypassare il vecchio paywall di repubblica.it (Rep:), attualmente permette di visualizzare gli articoli "premium" delle seguenti testate:
 
+* repubblica.it
+* lastampa.it
+* gazzetta.it
 
 ## Firefox 
 ### Add-on
