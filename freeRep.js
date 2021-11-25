@@ -30,10 +30,12 @@ const isGazzettaContent = el => checkAttr(el, "class", "content") // exact match
 const isLaStampa = () => location.host.endsWith("lastampa.it")
 const isGazzettaIt = () => location.host.endsWith("gazzetta.it")
 
+const findLaStampaPaywall = () => document.querySelector("div.main-content > #article-body > iframe")
+
 const buildAmpPath = () => {
     let path = "./amp/"
     if (isLaStampa()) {
-        path = location.pathname + "/amp/"
+        path = location.pathname + "amp/"
     } else if (isGazzettaIt()) {
         path = location.pathname.replace(/_preview(.shtml).*/, '$1/amp/')
     }
@@ -90,6 +92,11 @@ const freeRep = () => {
             const content = findNode(document, isGazzettaContent)
             if (content) {
                 content.appendChild(createAmpLink())
+            }
+        } else if (isLaStampa()) {
+            const el = findLaStampaPaywall();
+            if (el) {
+                el.replaceWith(createAmpLink())
             }
         } else {
             const el = findNode(document, isNewPaywall);
