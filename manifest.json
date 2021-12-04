@@ -6,6 +6,11 @@
   "icons": {
     "48": "icons/freeRep-48.png"
   },
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "https://*.repubblica.it/*"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -18,5 +23,10 @@
         "freeRep.js"
       ]
     }
-  ]
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
 }
