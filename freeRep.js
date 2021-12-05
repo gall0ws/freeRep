@@ -85,7 +85,7 @@ const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise(
 const freeRep = () => {
     if (!window.location.pathname.endsWith("/amp/")) {
         if (isRepubblica()) {
-            // Do nothing, the background script will handle that.
+            hide(findNode(document, isNewPaywall))
             // TODO: GM_* ?
         } else if (isGazzettaIt()) {
             [isGazzettaPaywall, isGazzettaPartnerLink].forEach(p => {
