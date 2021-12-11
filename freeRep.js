@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     freeRep
-// @version  1.5
+// @version  1.6
 // @include  https://*.repubblica.it/*
 // @include  https://*.lastampa.it/*
 // @include  https://*.gazzetta.it/*_preview.shtml*
