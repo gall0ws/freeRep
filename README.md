@@ -9,9 +9,6 @@ Semplice script originariamente nato per bypassare il vecchio paywall di repubbl
 ### Add-on
 Installa il pacchetto xpi dalla sezione [releases](https://github.com/gall0ws/freeRep/releases).
 
-### Greasemonkey
-Crea un user script con il contenuto di `freeRep.js`
-
 ## Chromium & co.
 
 ### Extension
@@ -21,5 +18,7 @@ Crea un user script con il contenuto di `freeRep.js`
 4. seleziona *Load unpacked*
 5. seleziona la directory dove hai clonato il repo
 
-## Tampermonkey (Chrome, Safari, Opera Next)
+## Greasemonkey / Tampermonkey (Chrome, Safari, Opera Next)
 Crea un user script con il contenuto di `freeRep.js`
+
+NOTA: Con freeRep >= 1.6 il il paywall di Repubblica.it non viene bypassato usando freeRep come script (vedi [PR#15](https://github.com/gall0ws/freeRep/pull/15))
