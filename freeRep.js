@@ -27,6 +27,8 @@ const isNewPaywall = el => checkClassName(el, "paywall__content")
 const isGazzettaPaywall = el => checkClassName(el, "bck-freemium__wall")
 const isGazzettaPartnerLink = el => checkClassName(el, "is-partner-link")
 const isGazzettaContent = el => checkAttr(el, "class", "content") // exact match
+
+const isRepubblica = () => location.host.endsWith("repubblica.it")
 const isLaStampa = () => location.host.endsWith("lastampa.it")
 const isGazzettaIt = () => location.host.endsWith("gazzetta.it")
 
@@ -82,7 +84,10 @@ const tryFindNode = (root, predicate, timeout =50, tlimit =5000) => new Promise(
 
 const freeRep = () => {
     if (!window.location.pathname.endsWith("/amp/")) {
-        if (isGazzettaIt()) {
+        if (isRepubblica()) {
+            hide(findNode(document, isNewPaywall))
+            // TODO: GM_* ?
+        } else if (isGazzettaIt()) {
             [isGazzettaPaywall, isGazzettaPartnerLink].forEach(p => {
                 const el = findNode(document, p)
                 if (el) {
