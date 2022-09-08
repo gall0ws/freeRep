@@ -10,7 +10,8 @@
     "webRequest",
     "webRequestBlocking",
     "https://*.repubblica.it/*",
-    "https://*.economist.com/*"
+    "https://*.economist.com/*",
+    "https://*.corriere.it/*"
   ],
   "content_scripts": [
     {
@@ -18,7 +19,8 @@
         "https://*.repubblica.it/*",
         "https://*.lastampa.it/*",
         "https://*.gazzetta.it/*_preview.shtml*",
-        "https://*.economist.com/*"
+        "https://*.economist.com/*",
+        "https://*.corriere.it/*"
       ],
       "run_at": "document_idle",
       "js": [
