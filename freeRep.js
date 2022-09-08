@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name     freeRep
-// @version  1.6
+// @version  1.5
 // @include  https://*.repubblica.it/*
 // @include  https://*.lastampa.it/*
 // @include  https://*.gazzetta.it/*_preview.shtml*
@@ -15,10 +15,14 @@ const checkAttr = (el, name, value) => {
     }
     return retv
 }
-
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  
 const checkClassName = (el, name) => el.classList && el.classList.contains(name)
 const hide = el => { if (el) { el.style.display = "none" } }
 const removeAttr = (el, name) => { el && el.attributes.removeNamedItem(name) }
+
 
 const isPaywall = el => checkAttr(el, "subscriptions-section", "content")
 const isPreview = el => checkAttr(el, "subscriptions-section", "content-not-granted")
@@ -27,10 +31,13 @@ const isNewPaywall = el => checkClassName(el, "paywall__content")
 const isGazzettaPaywall = el => checkClassName(el, "bck-freemium__wall")
 const isGazzettaPartnerLink = el => checkClassName(el, "is-partner-link")
 const isGazzettaContent = el => checkAttr(el, "class", "content") // exact match
+const isCorrierePaywall = el => checkClassName(el, "tp-iframe-wrapper")
+const isCorriereBlackscreen = el => checkClassName(el, "tp-backdrop")
 
 const isRepubblica = () => location.host.endsWith("repubblica.it")
 const isLaStampa = () => location.host.endsWith("lastampa.it")
 const isGazzettaIt = () => location.host.endsWith("gazzetta.it")
+const isCorriere = () => location.host.endsWith("corriere.it")
 
 const findLaStampaPaywall = () => document.querySelector("div.main-content > #article-body > iframe")
 
@@ -102,7 +109,13 @@ const freeRep = () => {
             const el = findLaStampaPaywall();
             if (el) {
                 el.replaceWith(createAmpLink())
-            }
+            } 
+        }else if(isCorriere()){
+            sleep(1800).then(() => {
+                hide(findNode(document, isCorrierePaywall))
+                hide(findNode(document, isCorriereBlackscreen))
+                document.getElementsByTagName("body")[0].style = "overflow: visible !important"
+              })
         } else {
             const el = findNode(document, isNewPaywall);
             if (el) {
