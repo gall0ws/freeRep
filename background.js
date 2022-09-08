@@ -8,7 +8,7 @@ const fixHeaders = ({requestHeaders}) => {
 }
 
 const filters = {
-    urls: [ "https://*.repubblica.it/*" ],
+    urls: [ "https://*.repubblica.it/*","https://*.economist.com/*" ],
     types: [ "main_frame" ]
 }
 const opts = [ "blocking", "requestHeaders" ]
