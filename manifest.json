@@ -9,14 +9,16 @@
   "permissions": [
     "webRequest",
     "webRequestBlocking",
-    "https://*.repubblica.it/*"
+    "https://*.repubblica.it/*",
+    "https://*.economist.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
         "https://*.repubblica.it/*",
         "https://*.lastampa.it/*",
-        "https://*.gazzetta.it/*_preview.shtml*"
+        "https://*.gazzetta.it/*_preview.shtml*",
+        "https://*.economist.com/*"
       ],
       "run_at": "document_idle",
       "js": [
